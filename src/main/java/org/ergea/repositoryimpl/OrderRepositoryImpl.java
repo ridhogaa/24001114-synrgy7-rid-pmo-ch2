@@ -1,6 +1,5 @@
 package org.ergea.repositoryimpl;
 
-import org.ergea.model.MenuItem;
 import org.ergea.model.OrderItem;
 import org.ergea.repository.OrderRepository;
 
@@ -28,10 +27,4 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .sum();
     }
 
-    @Override
-    public List<MenuItem> getListOrder() {
-        return orderItems.stream()
-                .map(OrderItem::getMenuItem)
-                .toList();
-    }
 }

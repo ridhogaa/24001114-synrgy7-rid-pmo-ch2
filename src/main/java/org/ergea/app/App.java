@@ -1,22 +1,20 @@
 package org.ergea.app;
 
 import org.ergea.model.History;
-import org.ergea.repository.HistoryRepository;
-import org.ergea.repository.MenuRepository;
-import org.ergea.repository.OrderRepository;
+import org.ergea.model.MenuItem;
+import org.ergea.model.OrderItem;
 import org.ergea.repositoryimpl.HistoryRepositoryImpl;
+import org.ergea.repositoryimpl.MenuRepositoryImpl;
 import org.ergea.repositoryimpl.OrderRepositoryImpl;
 import org.ergea.service.HistoryService;
 import org.ergea.service.MenuService;
 import org.ergea.service.OrderService;
-import org.ergea.model.MenuItem;
-import org.ergea.model.OrderItem;
-import org.ergea.repositoryimpl.MenuRepositoryImpl;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import static org.ergea.utils.Utils.INPUT;
@@ -29,20 +27,18 @@ public class App {
     private static final List<OrderItem> orderItems = new ArrayList<>();
 
     static {
-        MenuRepository menuRepository = new MenuRepositoryImpl();
-        OrderRepository orderRepository = new OrderRepositoryImpl(orderItems);
-        HistoryRepository historyRepository = new HistoryRepositoryImpl();
-        orderService = new OrderService(orderRepository);
-        menuService = new MenuService(menuRepository);
-        historyService = new HistoryService(historyRepository);
+        orderService = new OrderService(new OrderRepositoryImpl(orderItems));
+        menuService = new MenuService(new MenuRepositoryImpl());
+        historyService = new HistoryService(new HistoryRepositoryImpl());
     }
 
+
     public void run() {
-        boolean inputValid = false;
-        while (!inputValid) {
+        boolean isOrdering = false;
+        while (!isOrdering) {
             try {
                 orderMenu();
-                inputValid = true;
+                isOrdering = true;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input! Only numbers are allowed. Restarting the program!");
                 System.out.println("Try again!");
@@ -52,7 +48,7 @@ public class App {
         INPUT.close();
     }
 
-    private static void orderMenu() throws InputMismatchException {
+    private void orderMenu() throws InputMismatchException {
         System.out.println("--------------------------");
         System.out.println("Welcome to Binarfud");
         System.out.println("--------------------------");
@@ -77,7 +73,7 @@ public class App {
         orderMenu();
     }
 
-    private static void orderDetailFood(MenuItem menuItem) {
+    private void orderDetailFood(MenuItem menuItem) {
         System.out.println("----------------------------");
         System.out.println("How many would you like to order?");
         System.out.println("----------------------------");
@@ -88,10 +84,21 @@ public class App {
 
         if (quantity == 0) return;
 
-        orderItems.add(new OrderItem(menuItem, quantity));
+        if (orderItems
+                .stream()
+                .anyMatch(orderItem -> orderItem.getMenuItem().getName().contains(menuItem.getName()))
+        ) {
+            orderItems.stream()
+                    .filter(orderItem ->
+                            Objects.equals(orderItem.getMenuItem().getName(), menuItem.getName()))
+                    .forEach(orderItem ->
+                            orderItem.setQuantity(orderItem.getQuantity() + quantity));
+        } else {
+            orderItems.add(new OrderItem(menuItem, quantity));
+        }
     }
 
-    private static void pay() {
+    private void pay() {
         if (!orderItems.isEmpty()) {
             System.out.println("--------------------------------------------");
             System.out.println("Confirmation & Payment");
@@ -115,6 +122,7 @@ public class App {
                 File folder = new File(folderName);
                 if (!folder.exists()) folder.mkdir();
                 historyService.getHistoryRepository().printOrder(new History(orderItems), folderName);
+                orderItems.clear();
             } else if (choice == 0) {
                 System.exit(0);
             } else {
@@ -126,5 +134,14 @@ public class App {
         }
     }
 
-
+//    private void repeatOrder() {
+//        System.out.println("--------------------------------------------");
+//        System.out.println("Want to repeat order? ");
+//        System.out.println("--------------------------------------------");
+//        System.out.println("(Y) Continue");
+//        System.out.println("(N) Exit");
+//        System.out.print("=> ");
+//        String repeatOrder = INPUT.next();
+//        isOrdering = !repeatOrder.equalsIgnoreCase("y");
+//    }
 }

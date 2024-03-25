@@ -19,17 +19,17 @@ public class HistoryRepositoryImpl implements HistoryRepository {
             bwr.write("Binarfud\n");
             bwr.write("--------------------------------------------\n");
             bwr.write("Thank you for ordering at Binarfud\n\n");
-            bwr.write(String.format("Receipt ID: %s\n", file.getName()));
+            bwr.write(String.format("Receipt ID: %s\n", file.getName().split(".txt")[0]));
             bwr.write("Order Date: " + DATE_TIME_FORMATTER.format(LOCAL_DATE_NOW) + "\n\n");
             bwr.write("Order Details:\n\n");
             int count = 1;
             for (OrderItem orderItem : historyItems.getOrderItems()) {
                 bwr.write(String.format("%d. %s\t%d\t%s\n", count++, orderItem.getMenuItem().getName(),
-                        orderItem.getQuantity(), formatToRupiah(historyItems.getOrderItems().stream().mapToInt(value -> value.getMenuItem().getPrice() * value.getQuantity()).sum())));
+                        orderItem.getQuantity(), formatToRupiah(orderItem.getMenuItem().getPrice() * orderItem.getQuantity())));
             }
             bwr.write("-------------------------------------------+\n");
             bwr.write(String.format("Total Quantity: %d Total Price: %s\n", historyItems.getOrderItems().stream().mapToInt(OrderItem::getQuantity).sum(),
-                    formatToRupiah(historyItems.getOrderItems().stream().mapToInt(OrderItem::getQuantity).sum())));
+                    formatToRupiah(historyItems.getOrderItems().stream().mapToInt(value -> value.getMenuItem().getPrice() * value.getQuantity()).sum())));
             bwr.write("--------------------------------------------\n");
             bwr.write("Payment Method: Binarcash\n\n");
             bwr.write("--------------------------------------------\n");
