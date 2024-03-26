@@ -32,7 +32,6 @@ public class App {
         historyService = new HistoryService(new HistoryRepositoryImpl());
     }
 
-
     public void run() {
         boolean isOrdering = false;
         while (!isOrdering) {
@@ -123,6 +122,7 @@ public class App {
                 if (!folder.exists()) folder.mkdir();
                 historyService.getHistoryRepository().printOrder(new History(orderItems), folderName);
                 orderItems.clear();
+                repeatOrder();
             } else if (choice == 0) {
                 System.exit(0);
             } else {
@@ -130,18 +130,25 @@ public class App {
                 pay();
             }
         } else {
-            System.out.println("You haven't ordered anything yet. Please order first!\n");
+            System.out.println("You haven't ordered anything yet. Please order 1 menu!\n");
         }
     }
 
-//    private void repeatOrder() {
-//        System.out.println("--------------------------------------------");
-//        System.out.println("Want to repeat order? ");
-//        System.out.println("--------------------------------------------");
-//        System.out.println("(Y) Continue");
-//        System.out.println("(N) Exit");
-//        System.out.print("=> ");
-//        String repeatOrder = INPUT.next();
-//        isOrdering = !repeatOrder.equalsIgnoreCase("y");
-//    }
+    private void repeatOrder() {
+        System.out.println("--------------------------------------------");
+        System.out.println("Want to repeat order? ");
+        System.out.println("--------------------------------------------");
+        System.out.println("(Y) Continue");
+        System.out.println("(N) Exit");
+        System.out.print("=> ");
+        String repeatOrder = INPUT.next();
+        if (!repeatOrder.equalsIgnoreCase("y")) {
+            if (repeatOrder.equalsIgnoreCase("n")) {
+                System.exit(0);
+            } else {
+                System.out.println("Input not available! Out program!");
+                System.exit(0);
+            }
+        }
+    }
 }
