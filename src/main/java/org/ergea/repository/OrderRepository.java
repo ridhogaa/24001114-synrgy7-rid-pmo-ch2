@@ -1,6 +1,9 @@
 package org.ergea.repository;
 
+import java.util.Optional;
+
 public interface OrderRepository {
-    int getTotalPrice();
-    int getTotalQuantity();
+    Optional<Integer> getTotalPrice();
+
+    Optional<Integer> getTotalQuantity();
 }

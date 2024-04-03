@@ -11,10 +11,7 @@ import org.ergea.service.MenuService;
 import org.ergea.service.OrderService;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.ergea.utils.Utils.INPUT;
@@ -51,7 +48,10 @@ public class App {
         System.out.println("--------------------------");
         System.out.println("Welcome to Binarfud");
         System.out.println("--------------------------");
-        List<MenuItem> menuItems = menuService.getMenuRepository().getMenuItems();
+        List<MenuItem> menuItems = menuService
+                .getMenuRepository()
+                .getMenuItems()
+                .orElseGet(Collections::emptyList);
         IntStream.range(0, menuItems.size())
                 .mapToObj(i -> (i + 1) + ".\t" + menuItems.get(i).getName() + " | " + formatToRupiah(menuItems.get(i).getPrice()))
                 .forEach(System.out::println);
@@ -108,7 +108,7 @@ public class App {
                 count++;
             }
             System.out.println("-------------------------------------------+");
-            System.out.println("Total Quantity: " + orderService.getOrderRepository().getTotalQuantity() + " Total Price: " + formatToRupiah(orderService.getOrderRepository().getTotalPrice()));
+            System.out.println("Total Quantity: " + orderService.getOrderRepository().getTotalQuantity() + " Total Price: " + formatToRupiah(orderService.getOrderRepository().getTotalPrice().orElseThrow()));
             System.out.println("--------------------------------------------\n");
             System.out.println("1. Confirm & Pay");
             System.out.println("2. Go back to main menu");

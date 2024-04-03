@@ -4,6 +4,7 @@ import org.ergea.model.OrderItem;
 import org.ergea.repository.OrderRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class OrderRepositoryImpl implements OrderRepository {
 
@@ -14,17 +15,17 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public int getTotalPrice() {
-        return orderItems.stream()
+    public Optional<Integer> getTotalPrice() {
+        return Optional.of(orderItems.stream()
                 .mapToInt(value -> value.getMenuItem().getPrice() * value.getQuantity())
-                .sum();
+                .sum());
     }
 
     @Override
-    public int getTotalQuantity() {
-        return orderItems.stream()
+    public Optional<Integer> getTotalQuantity() {
+        return Optional.of(orderItems.stream()
                 .mapToInt(OrderItem::getQuantity)
-                .sum();
+                .sum());
     }
 
 }

@@ -1,0 +1,20 @@
+--------------------------------------------
+Binarfud
+--------------------------------------------
+Thank you for ordering at Binarfud
+
+Receipt ID: STRUK-1-[03-04-2024]
+Order Date: 03-04-2024
+
+Order Details:
+
+1. Nasi Goreng	2	Rp. 30.000
+-------------------------------------------+
+Total Quantity: 2 Total Price: Rp. 30.000
+--------------------------------------------
+Payment Method: Binarcash
+
+--------------------------------------------
+Save this receipt as
+proof of payment
+--------------------------------------------
