@@ -55,3 +55,42 @@ drop table product;
 drop table db_food_binar.public.order;
 drop table merchant;
 drop table users;
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+INSERT INTO merchant(id, merchant_name, merchant_location, open)
+VALUES (uuid_generate_v1(), 'test', 'test', true);
+
+INSERT INTO users(id, username, email_address, password)
+VALUES (uuid_generate_v1(), 'test', 'test', 'test');
+
+INSERT INTO db_food_binar.public.order(id, order_time, destination_address, user_id, completed)
+VALUES (uuid_generate_v1(), TIMESTAMP '2004-10-19 10:23:54', 'test', '227a16aa-fe04-11ee-8da1-088fc3276893', false);
+
+INSERT INTO product(id, product_name, price, merchant_id)
+VALUES (uuid_generate_v1(), 'test', 1000, '644800ec-fe04-11ee-8da3-088fc3276893');
+
+INSERT INTO order_detail(id, product_id, order_id, quantity, total_price)
+VALUES (uuid_generate_v1(), '3ddeb49a-fe05-11ee-8da5-088fc3276893', '0ecedcac-fe05-11ee-8da4-088fc3276893', 4, 4000);
+
+SELECT *
+FROM users;
+
+SELECT *
+FROM product;
+
+SELECT *
+FROM merchant;
+
+SELECT *
+FROM order_detail;
+
+SELECT *
+FROM db_food_binar.public.order;
+
+SELECT *
+FROM users
+         INNER JOIN db_food_binar.public.order o on users.id = o.user_id
+         INNER JOIN db_food_binar.public.order_detail od on o.id = od.order_id
+         INNER JOIN db_food_binar.public.product p on od.product_id = p.id
+         INNER JOIN db_food_binar.public.merchant m on p.merchant_id = m.id;
